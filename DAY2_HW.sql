@@ -162,18 +162,27 @@ Action                                             Telugu                       
 
 (2) Which movie sold the most tickets this month?
 
-SELECT screen_name,
-       screen_type,
-       capacity
-FROM Screen;
+SELECT m.title,
+       SUM(b.no_of_tickets) AS total_tickets
+FROM Movie m
+JOIN Show_Details s
+    ON m.movie_id = s.movie_id
+JOIN Booking b
+    ON s.show_id = b.show_id
+WHERE TO_CHAR(b.booking_date, 'MM-YYYY') = TO_CHAR(SYSDATE, 'MM-YYYY')
+GROUP BY m.title
+ORDER BY total_tickets DESC;
 
-SCREEN_NAME          SCREEN_TYPE            CAPACITY
--------------------- -------------------- ----------
-Screen 1             Dolby                       200
-Screen 2             2D                          150
-Screen 3             3D                           80
-Screen 4             2D                          120
-Screen 5             3D                          100
+TITLE
+---------------------------------------------------------------------
+TOTAL_TICKETS
+-------------
+Sitaare Zameen Par
+            5
+
+Mission Impossible
+            4
+                     100
 
 
 (3)  We can book tickets and instantly know how many seats are left for a specific show.
